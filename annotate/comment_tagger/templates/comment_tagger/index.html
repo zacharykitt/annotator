@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load tags_extra %}
+
+{% block meta %}
+<style>
+    body { background-color: black; }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1 class="text-light">Comment Annotator</h1>
+<div class="row">
+<div class="col-md-6">
+    <p>
+        {% if comment.id > 1 %}<a href="{% url 'comments.prev' comment.id %}" class="btn btn-outline-light">&lsaquo;</a>{% endif %}
+        <a href="{% url 'comments.index' %}" class="btn btn-outline-light">&#127968;</a>
+        {% if comment.reviewed_by > 0 and comment.id < comment_count %} <a href="{% url 'comments.next' comment.id %}" class="btn btn-outline-light">&rsaquo;</a>{% endif %}
+    </p>
+    <p class="text-light">
+    {{ comment.text }}
+    </p>
+    <p class="text-light">
+    {{ comment.code }} | {{ comment.id }} of {{ comment_count }}
+    </p>
+    <p>
+    {% for tag in used_tags %}
+    <a href="{% url 'comments.remove' comment.id tag.id %}" class="btn btn-{{ tag.color }} btn-sm m-1">{{ tag.text|format_tag }}</a>
+    {% endfor %}
+    </p>
+    <p>
+        <a class="btn btn-outline-light btn-lg btn-block" href="{% url 'comments.complete' comment.id %}">Mark as Complete</a>
+    </p>
+</div>
+
+<div class="col-md-6">
+        {% for tag in unused_tags %}
+            <a href="{% url 'comments.tag' comment.id tag.id %}" class="btn btn-{{ tag.color }} btn-sm m-1 {% if tag in used_tags %}disabled{% endif %}">{{ tag.text|format_tag }}</a>
+        {% endfor %}
+    <hr />
+    <form action="{% url 'comments.create_tag' comment.id %}" class="form-inline" method="post">
+        {% csrf_token %}
+        <input name="tag_text" placeholder="new tag name" class="form-control" type="text" />
+        <input type="submit" class="btn btn-dark" value="add tag">
+    </form>
+</div>
+</div>
+{% endblock %}
