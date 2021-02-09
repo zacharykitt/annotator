@@ -1,5 +1,7 @@
 # Annotator
 
+![Screenshot](https://github.com/zacharykitt/annotator/blob/assets/screenshot.png)
+
 This repo contains a Django-based comment annotation system. 
 
 ## Getting Started
